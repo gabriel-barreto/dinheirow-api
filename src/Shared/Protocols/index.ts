@@ -1,6 +1,5 @@
 export * from './controller.protocol'
 export * from './JWT.protocol'
-export * from './Request.protocol'
-export * from './Response.protocol'
+export * from './HTTP.protocol'
 export * from './validator.protocol'
 export * from './view.protocol'
