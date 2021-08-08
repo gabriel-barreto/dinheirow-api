@@ -4,6 +4,6 @@ export type Config = {
   secret: string
 }
 export interface JWTProvider {
-  verify: (jwt: string) => Promise<Record<string, any>>
+  verify: (jwt: string) => Promise<Input>
   sign: (input: Input) => Promise<string>
 }

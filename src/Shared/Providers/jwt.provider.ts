@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
 
 import { Config, Input, JWTProvider } from '@/Shared/Protocols'
+import { AppError } from '@/Shared/Errors'
+import { $errors } from '@/Shared/Utils'
 
 type Params = { config: Config }
 
@@ -12,12 +14,11 @@ export class JWT implements JWTProvider {
   }
 
   async verify(token: string) {
-    try {
-      const decoded = await jwt.verify(token, this.config.secret)
-      return decoded as Record<string, any>
-    } catch (_ex) {
-      return {}
+    const decoded = await jwt.verify(token, this.config.secret)
+    if (!decoded || typeof decoded === 'string') {
+      throw new AppError($errors.invalidToken, { token })
     }
+    return decoded as { email: string; id: string }
   }
 
   async sign(input: Input): Promise<string> {
