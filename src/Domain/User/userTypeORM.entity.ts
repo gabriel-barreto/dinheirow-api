@@ -24,6 +24,12 @@ export class User {
   @Column()
   password: string
 
+  @Column({ nullable: true, type: 'text' })
+  image: string | null
+
+  @Column({ nullable: true, type: 'text' })
+  bio: string | null
+
   @CreateDateColumn({
     name: 'created_at',
     select: false,

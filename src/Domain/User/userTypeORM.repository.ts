@@ -2,6 +2,7 @@ import { EntityRepository, Repository as _Repository } from 'typeorm'
 
 import { getTypeORMCustomRepo } from '@/Shared/Utils'
 
+import { AuthenticateUserRepository } from './Authenticate/authenticateUserRepository.protocol'
 import { CreateUserRepository } from './Create/createUserRepository.protocol'
 import { LoginUserRepository } from './Login/loginRepository.protocol'
 
@@ -15,7 +16,10 @@ interface UserRepo extends _Repository<User> {}
 class TypeORMRepo extends _Repository<User> implements UserRepo {}
 
 export class UserTypeORMRepository
-  implements LoginUserRepository, CreateUserRepository
+  implements
+    AuthenticateUserRepository,
+    CreateUserRepository,
+    LoginUserRepository
 {
   private $getRepo: () => UserRepo
 
@@ -30,7 +34,11 @@ export class UserTypeORMRepository
     return found
   }
 
-  findOneByUsername(username: string): Promise<User | null> {
+  public async findOneById(id: string): Promise<User | null> {
+    return this.findOne({ id })
+  }
+
+  public async findOneByUsername(username: string): Promise<User | null> {
     return this.findOne({ username })
   }
 
