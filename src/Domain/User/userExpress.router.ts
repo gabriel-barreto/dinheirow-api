@@ -6,6 +6,7 @@ import {
 import { makeCreateUserController } from './Create'
 import { makeCurrentUserController } from './Current'
 import { makeLoginController } from './Login'
+import { makeUpdateCurrentUserController } from './UpdateCurrent/updateCurrentController.factory'
 
 const namespace = '/user'
 const routes: Route[] = [
@@ -20,6 +21,12 @@ const routes: Route[] = [
     slug: '/',
     controller: makeCurrentUserController(),
     name: 'Current User'
+  },
+  {
+    method: 'PUT',
+    slug: '/',
+    controller: makeUpdateCurrentUserController(),
+    name: 'Update Current User'
   },
   {
     method: 'POST',

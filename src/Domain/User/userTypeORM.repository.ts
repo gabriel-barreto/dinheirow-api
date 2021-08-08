@@ -7,6 +7,7 @@ import { CreateUserRepository } from './Create/createUserRepository.protocol'
 import { LoginUserRepository } from './Login/loginRepository.protocol'
 
 import { User } from './userTypeORM.entity'
+import { UpdateCurrentUserRepository } from './UpdateCurrent/updateCurrentUserRepository.protocol'
 
 type UserPayload = Omit<User, 'id' | 'createdAt' | 'deletedAt' | 'updatedAt'>
 
@@ -19,12 +20,20 @@ export class UserTypeORMRepository
   implements
     AuthenticateUserRepository,
     CreateUserRepository,
-    LoginUserRepository
+    LoginUserRepository,
+    UpdateCurrentUserRepository
 {
   private $getRepo: () => UserRepo
 
   constructor() {
     this.$getRepo = getTypeORMCustomRepo<UserRepo>(TypeORMRepo)
+  }
+
+  async update(id: string, payload: User): Promise<User> {
+    const repo = this.$getRepo()
+    await repo.update({ id }, payload)
+    const updated = await this.findOne({ id })
+    return updated as User
   }
 
   private async findOne(query: Record<string, any>): Promise<User | null> {
