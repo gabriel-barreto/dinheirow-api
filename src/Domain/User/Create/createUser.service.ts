@@ -20,11 +20,18 @@ export class CreateUserService implements ICreateUserService {
     this.userRepo = userRepo
   }
 
-  public async execute(input: Input) {
-    const { email } = input
-    const duplication = await this.userRepo.findOneByEmail(email)
-    if (duplication) throw new AppError($errors.duplicated, { email })
-    const { password: rawPasswd, username } = input
+  public async execute({ email, username, password: rawPasswd }: Input) {
+    const [emailDuplication, usernameDuplication] = await Promise.all([
+      await this.userRepo.findOneByEmail(email),
+      await this.userRepo.findOneByUsername(username)
+    ])
+    if (emailDuplication || usernameDuplication) {
+      const duplications = {}
+      if (emailDuplication) Object.assign(duplications, { email })
+      if (usernameDuplication) Object.assign(duplications, { username })
+      throw new AppError($errors.duplicated, duplications)
+    }
+    if (emailDuplication) throw new AppError($errors.duplicated, { email })
     const ePasswd = await this.encrypter.hash(rawPasswd)
     const userPayload = { email, password: ePasswd, username }
     const newUser = await this.userRepo.insertOne(userPayload)
