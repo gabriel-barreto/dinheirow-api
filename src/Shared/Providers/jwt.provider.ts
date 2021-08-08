@@ -1,12 +1,15 @@
 import jwt from 'jsonwebtoken'
 
-import { jwt as $config } from '@/Config'
-import { JWTConfig, JWTProvider } from '@/Shared/Protocols'
+import { Config, Input, JWTProvider } from '@/Shared/Protocols'
 
-type TokenPayload = Record<string, any>
+type Params = { config: Config }
 
-class JsonWebToken implements JWTProvider {
-  constructor(private config: JWTConfig = $config) {}
+export class JWT implements JWTProvider {
+  private config: Config
+
+  constructor({ config }) {
+    this.config = config
+  }
 
   async verify(token: string) {
     try {
@@ -17,22 +20,10 @@ class JsonWebToken implements JWTProvider {
     }
   }
 
-  async sign(payload: TokenPayload): Promise<string> {
-    const token = await jwt.sign(payload, this.config.secret, {
+  async sign(input: Input): Promise<string> {
+    const token = await jwt.sign(input, this.config.secret, {
       expiresIn: this.config.expiresIn
     })
     return token
-  }
-}
-
-export class JWT implements JWTProvider {
-  constructor(private $jwt = new JsonWebToken()) {}
-
-  public async verify(token: string) {
-    return await this.$jwt.verify(token)
-  }
-
-  public async sign(payload: Record<string, any>) {
-    return await this.$jwt.sign(payload)
   }
 }
