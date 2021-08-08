@@ -1,8 +1,9 @@
-import { makeCreateUserController } from './Create'
 import {
   expressRouterInjector,
   Route
 } from '@/Shared/Decorators/expressRouterInjector.decorator'
+import { makeCreateUserController } from './Create'
+import { makeLoginController } from './Login'
 
 const namespace = '/user'
 const routes: Route[] = [
@@ -11,6 +12,12 @@ const routes: Route[] = [
     slug: '/',
     controller: makeCreateUserController(),
     name: 'Create User'
+  },
+  {
+    method: 'POST',
+    slug: '/login',
+    controller: makeLoginController(),
+    name: 'Login'
   }
 ]
 
