@@ -7,7 +7,8 @@ export class ExpressHandlerAdapter {
       const httpReq = {
         body: req.body,
         headers: req.headers,
-        params: req.params
+        params: req.params,
+        query: req.query
       }
       const httpRes = await controller.handle(httpReq)
       return res.status(httpRes.status).send(httpRes.body)
