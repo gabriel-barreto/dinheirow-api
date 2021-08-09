@@ -5,6 +5,11 @@ import { getTypeORMCustomRepo } from '@/Shared/Utils'
 import { GetArticlesRepository } from '@/Domain/Article/Get/getArticlesRepository.protocol'
 
 import { Article } from './articleTypeORM.entity'
+import {
+  FeedArticlesRepository,
+  Input,
+  Output
+} from './Feed/feedArticlesRepository.protocol'
 
 type FindInput = {
   query: {
@@ -21,11 +26,20 @@ interface ArticleRepo extends _Repository<Article> {}
 @EntityRepository(Article)
 class TypeORMRepo extends _Repository<Article> implements ArticleRepo {}
 
-export class ArticlesTypeORMRepository implements GetArticlesRepository {
+export class ArticlesTypeORMRepository
+  implements GetArticlesRepository, FeedArticlesRepository
+{
   private $getRepo: () => ArticleRepo
 
   constructor() {
     this.$getRepo = getTypeORMCustomRepo<ArticleRepo>(TypeORMRepo)
+  }
+
+  async getByAuthors(input: Input): Promise<Output> {
+    const { authorsId, limit: take, offset: skip } = input
+    const where = { authorId: In(authorsId) }
+    const found = await this.$getRepo().find({ skip, take, where })
+    return found
   }
 
   async find(input: FindInput): Promise<Article[]> {

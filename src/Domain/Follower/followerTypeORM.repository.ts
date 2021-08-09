@@ -7,6 +7,8 @@ import { FollowFollowerRepository } from '@/Domain/Profile/Follow/followFollower
 import { UnfollowFollowerRepository } from '@/Domain/Profile/Unfollow/unfollowFollowerRepository.protocol'
 
 import { Follower } from './followerTypeORM.entity'
+import { FeedFollowerRepository } from '../Article/Feed/feedFollowerRepository.protocol'
+import { Following } from '@/Shared/Models'
 
 type Input = { followedId: string; followerId: string }
 type Output = { followedId: string; followerId: string; id: string }
@@ -19,6 +21,7 @@ class TypeORMRepo extends _Repository<Follower> implements FollowerRepo {}
 export class FollowerTypeORMRepository
   implements
     GetProfileFollowerRepository,
+    FeedFollowerRepository,
     FollowFollowerRepository,
     UnfollowFollowerRepository
 {
@@ -26,6 +29,11 @@ export class FollowerTypeORMRepository
 
   constructor() {
     this.$getRepo = getTypeORMCustomRepo<FollowerRepo>(TypeORMRepo)
+  }
+
+  async findByFollowerId(followerId: string): Promise<Following[]> {
+    const found = await this.$getRepo().find({ followerId })
+    return found
   }
 
   async unfollow(input: Input): Promise<void> {

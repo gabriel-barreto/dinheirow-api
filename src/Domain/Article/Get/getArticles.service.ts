@@ -72,7 +72,14 @@ export class GetArticles implements GetArticlesService {
   }
 
   async execute(input: Input): Promise<Output> {
-    const { author, favorited, limit, loggedInUserId, offset, tag } = input
+    const {
+      author,
+      favorited,
+      loggedInUserId,
+      tag,
+      limit = 20,
+      offset = 0
+    } = input
     const query = {}
     if (author) {
       const user = await this.findUserByUsername(author)

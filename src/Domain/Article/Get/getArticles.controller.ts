@@ -28,7 +28,7 @@ export class GetArticlesController implements Controller {
 
   async handle(request: HttpReq | AuthHttpReq): Promise<HttpRes> {
     await this.validator.validate(request.query)
-    const { author, favorited, tag, limit = 20, offset = 0 } = request.query
+    const { author, favorited, limit, offset, tag } = request.query
     const loggedInUserId = 'user' in request ? request.user.id : undefined
     const articles = await this.getArticles.execute({
       author,

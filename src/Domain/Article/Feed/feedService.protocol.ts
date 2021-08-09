@@ -1,15 +1,12 @@
 import { Article } from '@/Shared/Models'
 
 export type Input = {
-  tag?: string
-  author?: string
-  favorited?: string
-  loggedInUserId?: string
+  loggedInUserId: string
   limit?: number
   offset?: number
 }
 export type Output = Article[]
 
-export interface GetArticlesService {
+export interface FeedService {
   execute(input: Input): Promise<Output>
 }
