@@ -2,12 +2,14 @@ import { EntityRepository, Repository as _Repository } from 'typeorm'
 
 import { getTypeORMCustomRepo } from '@/Shared/Utils'
 
+import { GetProfileUserRepository } from '@/Domain/Profile/Get/getProfileUserRepository.protocol'
+
 import { AuthenticateUserRepository } from './Authenticate/authenticateUserRepository.protocol'
 import { CreateUserRepository } from './Create/createUserRepository.protocol'
 import { LoginUserRepository } from './Login/loginRepository.protocol'
+import { UpdateCurrentUserRepository } from './UpdateCurrent/updateCurrentUserRepository.protocol'
 
 import { User } from './userTypeORM.entity'
-import { UpdateCurrentUserRepository } from './UpdateCurrent/updateCurrentUserRepository.protocol'
 
 type UserPayload = Omit<User, 'id' | 'createdAt' | 'deletedAt' | 'updatedAt'>
 
@@ -21,7 +23,8 @@ export class UserTypeORMRepository
     AuthenticateUserRepository,
     CreateUserRepository,
     LoginUserRepository,
-    UpdateCurrentUserRepository
+    UpdateCurrentUserRepository,
+    GetProfileUserRepository
 {
   private $getRepo: () => UserRepo
 
