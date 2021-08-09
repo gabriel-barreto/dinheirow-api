@@ -62,7 +62,6 @@ export class GetArticles implements GetArticlesService {
 
   private async getFavoritedArticleIdsOfUser(userId: string) {
     const found = await this.favoriteRepo.findByUserId(userId)
-    console.log(found)
     return found.map(({ articleId }) => articleId)
   }
 
