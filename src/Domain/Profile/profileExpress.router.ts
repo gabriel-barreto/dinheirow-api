@@ -5,6 +5,7 @@ import {
 
 import { makeGetProfileController } from './Get'
 import { makeFollowProfileController } from './Follow'
+import { makeUnfollowProfileController } from './Unfollow'
 
 const namespace = '/profiles'
 const routes: Route[] = [
@@ -13,6 +14,12 @@ const routes: Route[] = [
     slug: '/:username',
     controller: makeGetProfileController(),
     name: 'Get Profile'
+  },
+  {
+    method: 'DELETE',
+    slug: '/:username/follow',
+    controller: makeUnfollowProfileController(),
+    name: 'Unfollow User'
   },
   {
     method: 'POST',

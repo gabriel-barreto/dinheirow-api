@@ -4,6 +4,7 @@ import { getTypeORMCustomRepo } from '@/Shared/Utils'
 
 import { GetProfileFollowerRepository } from '@/Domain/Profile/Get/getProfileFollowerRepository.protocol'
 import { FollowFollowerRepository } from '@/Domain/Profile/Follow/followFollowerRepository.protocol'
+import { UnfollowFollowerRepository } from '@/Domain/Profile/Unfollow/unfollowFollowerRepository.protocol'
 
 import { Follower } from './followerTypeORM.entity'
 
@@ -16,12 +17,19 @@ interface FollowerRepo extends _Repository<Follower> {}
 class TypeORMRepo extends _Repository<Follower> implements FollowerRepo {}
 
 export class FollowerTypeORMRepository
-  implements GetProfileFollowerRepository, FollowFollowerRepository
+  implements
+    GetProfileFollowerRepository,
+    FollowFollowerRepository,
+    UnfollowFollowerRepository
 {
   private $getRepo: () => FollowerRepo
 
   constructor() {
     this.$getRepo = getTypeORMCustomRepo<FollowerRepo>(TypeORMRepo)
+  }
+
+  async unfollow(input: Input): Promise<void> {
+    await this.$getRepo().delete(input)
   }
 
   async follow(input: Input): Promise<Output> {
